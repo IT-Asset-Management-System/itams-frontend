@@ -13,13 +13,17 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../../api/auth';
+import { useAuthContext } from '../../context/AuthContext';
+import { toast } from 'react-toastify';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = ['Tài sản của tôi', 'Cấp phát tài sản'];
+const settings = ['Profile', 'Logout'];
 
 const Header = () => {
   const navigate = useNavigate();
-  
+  const { getAuth, avatar40, authContext } = useAuthContext();
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
@@ -40,6 +44,18 @@ const Header = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleClickUserMenu = async (setting: string) => {
+    if (setting === settings[1])
+      try {
+        await logout();
+        getAuth();
+        navigate('/login');
+      } catch (err: any) {
+        console.log(err);
+        toast.error(err.response.data.message);
+      }
   };
 
   return (
@@ -135,7 +151,7 @@ const Header = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="avatar" src={avatar40} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -155,7 +171,10 @@ const Header = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => handleClickUserMenu(setting)}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
