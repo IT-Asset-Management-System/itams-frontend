@@ -58,6 +58,19 @@ const Header = () => {
       }
   };
 
+  const handleClickNavMenu = async (page: string) => {
+    switch (page) {
+      case pages[0]:
+        navigate('/');
+        return;
+      case pages[1]:
+        navigate('/request-asset');
+        return;
+      default:
+        return;
+    }
+  };
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -111,7 +124,7 @@ const Header = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={() => handleClickNavMenu(page)}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -140,7 +153,7 @@ const Header = () => {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => handleClickNavMenu(page)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
