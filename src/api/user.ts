@@ -1,11 +1,8 @@
 import axios from './axios';
 import FormData from 'form-data';
 
-export const updateProfile = async (
-  fieldName: string,
-  value: string | null,
-) => {
-  const data = await axios.put('/user/update-profile', { [fieldName]: value });
+export const updateProfile = async (profile: any) => {
+  const data = await axios.put('/user/update-profile', profile);
   return data;
 };
 
@@ -22,15 +19,8 @@ export const saveAvatar = async (file: any) => {
   return data;
 };
 
-export const getAvatar40 = async () => {
-  const data = await axios.get('/user/get-avatar-40x40', {
-    responseType: 'arraybuffer',
-  });
-  return data;
-};
-
-export const getAvatar70 = async () => {
-  const data = await axios.get('/user/get-avatar-70x70', {
+export const getAvatar = async () => {
+  const data = await axios.get('/user/get-avatar', {
     responseType: 'arraybuffer',
   });
   return data;

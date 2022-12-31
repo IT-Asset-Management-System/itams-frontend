@@ -4,7 +4,14 @@ import {
   PrivateWrapper,
   PrivateWrapperForLogin,
 } from './components/PrivateWrapper';
-import { Login, Layout, NoPage, MyAssets, RequestAsset } from './pages';
+import {
+  Login,
+  Layout,
+  NoPage,
+  MyAssets,
+  RequestAsset,
+  Profile,
+} from './pages';
 
 import AuthProvider from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
@@ -19,6 +26,7 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<MyAssets />} />
               <Route path="request-asset" element={<RequestAsset />} />
+              <Route path="profile" element={<Profile />} />
             </Route>
           </Route>
           <Route element={<PrivateWrapperForLogin />}>

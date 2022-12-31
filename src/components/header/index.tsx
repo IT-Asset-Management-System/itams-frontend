@@ -22,7 +22,7 @@ const settings = ['Profile', 'Logout'];
 
 const Header = () => {
   const navigate = useNavigate();
-  const { getAuth, avatar40, authContext } = useAuthContext();
+  const { getAuth, avatar, authContext } = useAuthContext();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
@@ -47,15 +47,23 @@ const Header = () => {
   };
 
   const handleClickUserMenu = async (setting: string) => {
-    if (setting === settings[1])
-      try {
-        await logout();
-        getAuth();
-        navigate('/login');
-      } catch (err: any) {
-        console.log(err);
-        toast.error(err.response.data.message);
-      }
+    switch (setting) {
+      case settings[0]:
+        navigate('/profile');
+        return;
+      case settings[1]:
+        try {
+          await logout();
+          getAuth();
+          navigate('/login');
+        } catch (err: any) {
+          console.log(err);
+          toast.error(err.response.data.message);
+        }
+        return;
+      default:
+        return;
+    }
   };
 
   const handleClickNavMenu = async (page: string) => {
@@ -125,7 +133,9 @@ const Header = () => {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={() => handleClickNavMenu(page)}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography textTransform="capitalize" textAlign="center">
+                    {page}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -154,7 +164,12 @@ const Header = () => {
               <Button
                 key={page}
                 onClick={() => handleClickNavMenu(page)}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{
+                  my: 2,
+                  color: 'white',
+                  display: 'block',
+                  textTransform: 'capitalize',
+                }}
               >
                 {page}
               </Button>
@@ -164,7 +179,7 @@ const Header = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="avatar" src={avatar40} />
+                <Avatar alt="avatar" src={avatar} />
               </IconButton>
             </Tooltip>
             <Menu

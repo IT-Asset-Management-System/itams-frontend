@@ -9,8 +9,7 @@ function AuthProvider({ children }: any) {
     isLoading,
     authContext,
     isAuthenticated,
-    avatar40,
-    avatar70,
+    avatar,
     getAuth,
     updateProfile,
   } = useAuth();
@@ -26,8 +25,7 @@ function AuthProvider({ children }: any) {
       value={{
         authContext,
         isAuthenticated,
-        avatar40,
-        avatar70,
+        avatar,
         getAuth,
         updateProfile,
       }}

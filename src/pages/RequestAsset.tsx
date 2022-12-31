@@ -10,7 +10,7 @@ function RequestAsset() {
         background: '#EEE',
       }}
     >
-      Request Aset
+      Request Asset
     </Box>
   );
 }
