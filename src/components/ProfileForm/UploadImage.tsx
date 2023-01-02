@@ -1,9 +1,5 @@
 import ImageUploading from 'react-images-uploading';
-import {
-  Box,
-  Typography,
-  Grid,
-} from '@mui/material';
+import { Box, Typography, Grid } from '@mui/material';
 
 export function UploadImage(props: any) {
   const { image, onImageChange } = props;

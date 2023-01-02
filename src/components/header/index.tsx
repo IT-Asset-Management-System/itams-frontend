@@ -17,7 +17,7 @@ import { logout } from '../../api/auth';
 import { useAuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 
-const pages = ['Tài sản của tôi', 'Cấp phát tài sản'];
+const pages = ['My assets', 'Request assets'];
 const settings = ['Profile', 'Logout'];
 
 const Header = () => {

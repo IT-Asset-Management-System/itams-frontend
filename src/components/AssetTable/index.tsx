@@ -20,75 +20,73 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import { getAsset } from '../../api/asset';
 
 interface Asset {
-  code: number;
-  type: string;
+  id: number;
+  category: string;
   manufacturer: string;
   supplier: string;
   name: string;
   status: string;
-  note: string;
 }
 
-function createData(
-  code: number,
-  type: string,
-  manufacturer: string,
-  supplier: string,
-  name: string,
-  status: string,
-  note: string,
-): Asset {
-  return {
-    code,
-    type,
-    manufacturer,
-    supplier,
-    name,
-    status,
-    note,
-  };
-}
+// function createData(
+//   code: number,
+//   type: string,
+//   manufacturer: string,
+//   supplier: string,
+//   name: string,
+//   status: string,
+// ): Asset {
+//   return {
+//     id,
+//     category,
+//     manufacturer,
+//     supplier,
+//     name,
+//     status,
+//   };
+// }
 
-const rows = [
-  createData(
-    31,
-    'Laptop',
-    'DELL',
-    'Petrosetco',
-    'Dell Inspiration',
-    'Normal',
-    '',
-  ),
-  createData(
-    32,
-    'Adapter',
-    'DELL',
-    'Petrosetco',
-    'Dell 65W ADAPTER',
-    'Normal',
-    '',
-  ),
-  createData(
-    33,
-    'Laptop Bags',
-    'DELL',
-    'Pico',
-    'Dell Black Laptop Bag',
-    'Normal',
-    '',
-  ),
-  createData(
-    34,
-    'Monitor',
-    'DELL',
-    'HANOI COMPUTER',
-    'Dell 21.5',
-    'Normal',
-    '',
-  ),
-];
+// const rows = [
+//   createData(
+//     31,
+//     'Laptop',
+//     'DELL',
+//     'Petrosetco',
+//     'Dell Inspiration',
+//     'Normal',
+//     '',
+//   ),
+//   createData(
+//     32,
+//     'Adapter',
+//     'DELL',
+//     'Petrosetco',
+//     'Dell 65W ADAPTER',
+//     'Normal',
+//     '',
+//   ),
+//   createData(
+//     33,
+//     'Laptop Bags',
+//     'DELL',
+//     'Pico',
+//     'Dell Black Laptop Bag',
+//     'Normal',
+//     '',
+//   ),
+//   createData(
+//     34,
+//     'Monitor',
+//     'DELL',
+//     'HANOI COMPUTER',
+//     'Dell 21.5',
+//     'Normal',
+//     '',
+//   ),
+// ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -140,40 +138,40 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
   {
-    id: 'code',
+    id: 'id',
     numeric: false,
     disablePadding: true,
-    label: 'Mã tài sản',
+    label: 'ID',
   },
   {
-    id: 'type',
+    id: 'category',
     numeric: false,
     disablePadding: false,
-    label: 'Loại tài sản',
+    label: 'Category',
   },
   {
     id: 'manufacturer',
     numeric: false,
     disablePadding: false,
-    label: 'Nhà sản xuất',
+    label: 'Manufacturer',
   },
   {
     id: 'supplier',
     numeric: false,
     disablePadding: false,
-    label: 'Nhà cung cấp',
+    label: 'Supplier',
   },
   {
     id: 'name',
     numeric: false,
     disablePadding: false,
-    label: 'Tên tài sản',
+    label: 'Name',
   },
   {
     id: 'status',
     numeric: false,
     disablePadding: false,
-    label: 'Trạng thái',
+    label: 'Status',
   },
 ];
 
@@ -302,11 +300,24 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 
 export default function AssetTable() {
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Asset>('code');
+  const [orderBy, setOrderBy] = React.useState<keyof Asset>('id');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rows, setRows] = React.useState<Asset[]>([]);
+
+  React.useEffect(() => {
+    const getAssets = async () => {
+      try {
+        const asset = await getAsset();
+        setRows(asset);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getAssets();
+  }, []);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -401,7 +412,7 @@ export default function AssetTable() {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.code}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -419,9 +430,9 @@ export default function AssetTable() {
                         scope="row"
                         padding="none"
                       >
-                        {row.code}
+                        {row.id}
                       </TableCell>
-                      <TableCell align="left">{row.type}</TableCell>
+                      <TableCell align="left">{row.category}</TableCell>
                       <TableCell align="left">{row.manufacturer}</TableCell>
                       <TableCell align="left">{row.supplier}</TableCell>
                       <TableCell align="left">{row.name}</TableCell>
