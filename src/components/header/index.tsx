@@ -11,7 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+// import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../api/auth';
 import { useAuthContext } from '../../context/AuthContext';
@@ -22,7 +22,7 @@ const settings = ['Profile', 'Logout'];
 
 const Header = () => {
   const navigate = useNavigate();
-  const { getAuth, avatar, authContext } = useAuthContext();
+  const { getAuth, avatar } = useAuthContext();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
@@ -47,6 +47,7 @@ const Header = () => {
   };
 
   const handleClickUserMenu = async (setting: string) => {
+    handleCloseUserMenu();
     switch (setting) {
       case settings[0]:
         navigate('/profile');
@@ -83,7 +84,7 @@ const Header = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
           <Typography
             variant="h6"
             noWrap
@@ -140,7 +141,7 @@ const Header = () => {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
           <Typography
             variant="h5"
             noWrap

@@ -8,7 +8,7 @@ function MyAssets() {
         display: 'flex',
         justifyContent: 'space-around',
         alignItems: 'center',
-        background: '#EEE',
+        // background: '#EEE',
       }}
     >
       <AssetTable />

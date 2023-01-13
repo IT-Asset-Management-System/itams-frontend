@@ -23,5 +23,5 @@ export const getAvatar = async () => {
   const data = await axios.get('/user/get-avatar', {
     responseType: 'arraybuffer',
   });
-  return data;
+  return data.data;
 };

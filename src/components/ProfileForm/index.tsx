@@ -7,19 +7,34 @@ import { useState } from 'react';
 import InputField from './InputField';
 import { UploadImage } from './UploadImage';
 import { toast } from 'react-toastify';
+import { resetPasswordValidationSchema } from '../../helpers/validationSchema';
+import PasswordField from './PasswordField';
+import { changePassword } from '../../api/auth';
 
 function ProfileForm() {
-  const { authContext } = useAuthContext();
+  const { authContext, updateAuth } = useAuthContext();
   const [image, setImage] = useState<ImageListType>([]);
   const onImageChange = async (imageList: ImageListType) => {
     setImage(imageList);
   };
 
+  const initialValues = {
+    ...authContext,
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  };
+
   const handleSave = async (profile: any) => {
     try {
-      await updateProfile(profile);
+      const { currentPassword, newPassword, confirmPassword, ...info } =
+        profile;
+      await updateProfile(info);
       if (image.length > 0) await saveAvatar(image[0].file);
+      if (newPassword.length > 0)
+        await changePassword(currentPassword, newPassword);
       toast.success('Update successfully');
+      await updateAuth();
     } catch (err: any) {
       console.log('update profile', err);
       toast.error(err.response.data.message);
@@ -44,7 +59,13 @@ function ProfileForm() {
       >
         My Profile
       </Typography>
-      <Formik initialValues={authContext} onSubmit={handleSave}>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={resetPasswordValidationSchema}
+        validateOnChange={false}
+        validateOnBlur={false}
+        onSubmit={handleSave}
+      >
         {(formik) => {
           return (
             <Form>
@@ -62,6 +83,21 @@ function ProfileForm() {
                   formik={formik}
                 />
                 <InputField id="phone" fieldName="Phone" formik={formik} />
+                <PasswordField
+                  id="currentPassword"
+                  fieldName="Current password"
+                  formik={formik}
+                />
+                <PasswordField
+                  id="newPassword"
+                  fieldName="New password"
+                  formik={formik}
+                />
+                <PasswordField
+                  id="confirmPassword"
+                  fieldName="Confirm password"
+                  formik={formik}
+                />
                 <UploadImage image={image} onImageChange={onImageChange} />
               </Box>
               <Box

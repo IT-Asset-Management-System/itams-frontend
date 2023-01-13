@@ -20,14 +20,13 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import { getAsset } from '../../api/asset';
+import { getRequestAsset } from '../../api/asset';
+import moment from 'moment';
 
-interface Asset {
+interface RequestAsset {
   id: number;
   category: string;
-  manufacturer: string;
-  supplier: string;
-  name: string;
+  date: string;
   status: string;
 }
 
@@ -74,7 +73,7 @@ function stableSort<T>(
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Asset;
+  id: keyof RequestAsset;
   label: string;
   numeric: boolean;
 }
@@ -93,22 +92,10 @@ const headCells: readonly HeadCell[] = [
     label: 'Category',
   },
   {
-    id: 'manufacturer',
+    id: 'date',
     numeric: false,
     disablePadding: false,
-    label: 'Manufacturer',
-  },
-  {
-    id: 'supplier',
-    numeric: false,
-    disablePadding: false,
-    label: 'Supplier',
-  },
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: false,
-    label: 'Name',
+    label: 'Date',
   },
   {
     id: 'status',
@@ -122,7 +109,7 @@ interface EnhancedTableProps {
   numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof Asset,
+    property: keyof RequestAsset,
   ) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
@@ -140,7 +127,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     onRequestSort,
   } = props;
   const createSortHandler =
-    (property: keyof Asset) => (event: React.MouseEvent<unknown>) => {
+    (property: keyof RequestAsset) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
 
@@ -221,7 +208,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           id="tableTitle"
           component="div"
         >
-          My assets
+          Assets requested
         </Typography>
       )}
       {numSelected > 0 ? (
@@ -241,30 +228,18 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   );
 }
 
-export default function AssetTable() {
+export default function RequestTable(props: any) {
   const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Asset>('id');
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
+  const [orderBy, setOrderBy] = React.useState<keyof RequestAsset>('id');
+  const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [rows, setRows] = React.useState<Asset[]>([]);
-
-  React.useEffect(() => {
-    const getAssets = async () => {
-      try {
-        const asset = await getAsset();
-        setRows(asset);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getAssets();
-  }, []);
+  const { rows } = props;
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof Asset,
+    property: keyof RequestAsset,
   ) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -273,19 +248,19 @@ export default function AssetTable() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = rows.map((n: RequestAsset) => n.id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
+  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: readonly number[] = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -315,7 +290,7 @@ export default function AssetTable() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
+  const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -345,7 +320,7 @@ export default function AssetTable() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(+row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
@@ -365,7 +340,7 @@ export default function AssetTable() {
                           inputProps={{
                             'aria-labelledby': labelId,
                           }}
-                          onClick={(event) => handleClick(event, row.name)}
+                          onClick={(event) => handleClick(event, +row.id)}
                         />
                       </TableCell>
                       <TableCell
@@ -377,9 +352,9 @@ export default function AssetTable() {
                         {row.id}
                       </TableCell>
                       <TableCell align="left">{row.category}</TableCell>
-                      <TableCell align="left">{row.manufacturer}</TableCell>
-                      <TableCell align="left">{row.supplier}</TableCell>
-                      <TableCell align="left">{row.name}</TableCell>
+                      <TableCell align="left">
+                        {moment(row.date).format('MM/DD/YYYY')}
+                      </TableCell>
                       <TableCell align="left">{row.status}</TableCell>
                     </TableRow>
                   );

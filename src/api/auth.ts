@@ -2,13 +2,13 @@ import axios from './axios';
 
 export const auth = async () => {
   const data = await axios.get('/auth');
-  return data;
+  return data.data;
 };
 
 export const login = async (username: string, password: string) => {
   const data = await axios.post('/auth/login', {
-    username: username,
-    password: password,
+    username,
+    password,
   });
   axios.defaults.headers.Authorization = `Bearer ${data.data.access_token}`;
   window.localStorage.setItem('access-token', data.data.access_token);
@@ -17,7 +17,17 @@ export const login = async (username: string, password: string) => {
 
 export const logout = async () => {
   // const data = await axios.post('/auth/logout');
-  axios.defaults.headers.Authorization = '';
-  window.localStorage.setItem('access-token', '');
+  window.localStorage.removeItem('access-token');
   // return data;
+};
+
+export const changePassword = async (
+  currentPassword: string,
+  newPassword: string,
+) => {
+  const data = await axios.post('/auth/change-password', {
+    currentPassword,
+    newPassword,
+  });
+  return data.data;
 };

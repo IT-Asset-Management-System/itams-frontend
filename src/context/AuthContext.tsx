@@ -11,7 +11,7 @@ function AuthProvider({ children }: any) {
     isAuthenticated,
     avatar,
     getAuth,
-    updateProfile,
+    updateAuth,
   } = useAuth();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function AuthProvider({ children }: any) {
         isAuthenticated,
         avatar,
         getAuth,
-        updateProfile,
+        updateAuth,
       }}
     >
       {children}

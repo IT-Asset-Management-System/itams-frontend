@@ -13,12 +13,11 @@ export const useAuth = () => {
     setIsLoading(true);
     try {
       const data = await auth();
-      console.log('auth context', data.data);
-      setAuthContext(data.data);
+      setAuthContext(data);
       setIsAuthenticated(true);
 
       const dataImage = await getAvatar();
-      const url = blobToImageUrl(dataImage.data);
+      const url = blobToImageUrl(dataImage);
       setAvatar(url);
 
       setIsLoading(false);
@@ -29,13 +28,13 @@ export const useAuth = () => {
     }
   };
 
-  const updateProfile = async () => {
+  const updateAuth = async () => {
     try {
       const data = await auth();
-      setAuthContext(data.data);
+      setAuthContext(data);
 
       const dataImage = await getAvatar();
-      const url = blobToImageUrl(dataImage.data);
+      const url = blobToImageUrl(dataImage);
       setAvatar(url);
     } catch (err) {
       console.log(err);
@@ -48,6 +47,6 @@ export const useAuth = () => {
     isAuthenticated,
     avatar,
     getAuth,
-    updateProfile,
+    updateAuth,
   };
 };
