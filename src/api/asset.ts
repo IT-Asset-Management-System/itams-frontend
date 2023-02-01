@@ -1,3 +1,4 @@
+import { NewRequestAsset } from '../interface/interface';
 import axios from './axios';
 
 export const getAsset = async () => {
@@ -10,7 +11,18 @@ export const getRequestAsset = async () => {
   return response.data;
 };
 
-export const newRequestAsset = async (categoryId: number) => {
-  const response = await axios.post('/asset/new-request', { categoryId });
+export const updateRequestAsset = async (
+  id: number | string,
+  requestAsset: NewRequestAsset,
+) => {
+  const response = await axios.put('/asset/update-request', {
+    id: id,
+    ...requestAsset,
+  });
+  return response.data;
+};
+
+export const createNewRequestAsset = async (requestAsset: NewRequestAsset) => {
+  const response = await axios.post('/asset/new-request', requestAsset);
   return response.data;
 };

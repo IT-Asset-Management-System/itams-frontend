@@ -15,20 +15,22 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { getRequestAsset } from '../../api/asset';
-import moment from 'moment';
+import Actions from '../../components/Actions';
+import { toast } from 'react-toastify';
 
-interface RequestAsset {
-  id: number;
-  category: string;
-  date: string;
-  status: string;
-}
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { getPref, Prefs, setPref } from '../../prefs';
+import { RequestAsset } from '../../interface/interface';
+import { formatDate } from '../../helpers/format';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -86,10 +88,10 @@ const headCells: readonly HeadCell[] = [
     label: 'ID',
   },
   {
-    id: 'category',
+    id: 'assetModel',
     numeric: false,
     disablePadding: false,
-    label: 'Category',
+    label: 'Model',
   },
   {
     id: 'date',
@@ -166,6 +168,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             </TableSortLabel>
           </TableCell>
         ))}
+        <TableCell>Actions</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -192,25 +195,28 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         }),
       }}
     >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Assets requested
-        </Typography>
-      )}
+      {
+        numSelected > 0 && (
+          <Typography
+            sx={{ flex: '1 1 100%' }}
+            color="inherit"
+            variant="subtitle1"
+            component="div"
+          >
+            {numSelected} selected
+          </Typography>
+        )
+        // : (
+        //   <Typography
+        //     sx={{ flex: '1 1 100%' }}
+        //     variant="h6"
+        //     id="tableTitle"
+        //     component="div"
+        //   >
+        //     All Assets
+        //   </Typography>
+        // )
+      }
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
@@ -228,14 +234,51 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   );
 }
 
-export default function RequestTable(props: any) {
+export default function RequestAssetTable() {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof RequestAsset>('id');
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const { rows } = props;
+  const [rowsPerPage, setRowsPerPage] = React.useState(
+    getPref<number>(Prefs.ROWS_PER_PAGE) ?? 5,
+  );
+  const [rows, setRows] = React.useState<RequestAsset[]>([]);
+
+  const [open, setOpen] = React.useState(false);
+  const [idToDelete, setIdToDelete] = React.useState<number>(0);
+  const handleClickOpen = (id: number) => {
+    setOpen(true);
+    setIdToDelete(id);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const getData = async () => {
+    try {
+      const asset = await getRequestAsset();
+      setRows(asset);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  React.useEffect(() => {
+    getData();
+  }, []);
+
+  const handleDelete = async (id: number) => {
+    try {
+      // await deleteAsset(id);
+      handleClose();
+      await getData();
+      setIdToDelete(0);
+      toast.success('Deleted');
+    } catch (err: any) {
+      console.log(err);
+      toast.error(err.response.data.message);
+    }
+  };
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -248,7 +291,7 @@ export default function RequestTable(props: any) {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n: RequestAsset) => n.id);
+      const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -283,11 +326,8 @@ export default function RequestTable(props: any) {
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
+    setPref(Prefs.ROWS_PER_PAGE, event.target.value);
     setPage(0);
-  };
-
-  const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDense(event.target.checked);
   };
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
@@ -304,7 +344,7 @@ export default function RequestTable(props: any) {
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
+            size="medium"
           >
             <EnhancedTableHead
               numSelected={selected.length}
@@ -320,7 +360,7 @@ export default function RequestTable(props: any) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(+row.id);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
@@ -340,7 +380,7 @@ export default function RequestTable(props: any) {
                           inputProps={{
                             'aria-labelledby': labelId,
                           }}
-                          onClick={(event) => handleClick(event, +row.id)}
+                          onClick={(event) => handleClick(event, row.id)}
                         />
                       </TableCell>
                       <TableCell
@@ -351,18 +391,24 @@ export default function RequestTable(props: any) {
                       >
                         {row.id}
                       </TableCell>
-                      <TableCell align="left">{row.category}</TableCell>
-                      <TableCell align="left">
-                        {moment(row.date).format('MM/DD/YYYY')}
-                      </TableCell>
+                      <TableCell align="left">{row.assetModel}</TableCell>
+                      <TableCell align="left">{formatDate(row.date)}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
+                      <TableCell align="left">
+                        <Actions
+                          id={row.id}
+                          path="hardware"
+                          data={row}
+                          onClickDelete={handleClickOpen}
+                        />
+                      </TableCell>
                     </TableRow>
                   );
                 })}
               {emptyRows > 0 && (
                 <TableRow
                   style={{
-                    height: (dense ? 33 : 53) * emptyRows,
+                    height: 53 * emptyRows,
                   }}
                 >
                   <TableCell colSpan={6} />
@@ -381,10 +427,27 @@ export default function RequestTable(props: any) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
+      <Box>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{'Delete'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you wish to delete ?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={() => handleDelete(idToDelete)} autoFocus>
+              Yes
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
     </Box>
   );
 }

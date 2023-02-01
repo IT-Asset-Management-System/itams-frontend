@@ -18,7 +18,7 @@ import { useAuthContext } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 
 const pages = ['My assets', 'Request assets'];
-const settings = ['Profile', 'Logout'];
+const settings = ['Edit Your Profile', 'Change Password', 'Logout'];
 
 const Header = () => {
   const navigate = useNavigate();
@@ -53,6 +53,9 @@ const Header = () => {
         navigate('/profile');
         return;
       case settings[1]:
+        navigate('/password');
+        return;
+      case settings[2]:
         try {
           await logout();
           getAuth();

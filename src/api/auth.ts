@@ -10,7 +10,6 @@ export const login = async (username: string, password: string) => {
     username,
     password,
   });
-  axios.defaults.headers.Authorization = `Bearer ${data.data.access_token}`;
   window.localStorage.setItem('access-token', data.data.access_token);
   return data;
 };

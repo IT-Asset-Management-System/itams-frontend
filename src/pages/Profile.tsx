@@ -1,19 +1,11 @@
 import { Box } from '@mui/material';
+import PageHeader from '../components/PageHeader';
 import ProfileForm from '../components/ProfileForm';
 
 function Profile() {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        background: '#EEE',
-        width: '100%',
-        flexGrow: 1,
-        py: '30px',
-      }}
-    >
+    <Box>
+      <PageHeader name="Edit Your Profile" noButton />
       <ProfileForm />
     </Box>
   );

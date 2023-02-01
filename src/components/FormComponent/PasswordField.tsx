@@ -10,7 +10,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useState } from 'react';
 
 function PasswordField(props: any) {
-  const { id, fieldName, disabled, fullWidth, formik } = props;
+  const { id, fieldName, disabled, fullWidth, formik, required } = props;
   const [showPassword, setShowPassword] = useState<boolean>(false);
   return (
     <Box sx={{ flexGrow: 1, py: '16px' }}>
@@ -24,7 +24,9 @@ function PasswordField(props: any) {
             pr: '16px',
           }}
         >
-          <Typography sx={{ fontWeight: 'bold' }}>{fieldName}</Typography>
+          <Typography sx={{ fontWeight: 'bold' }}>
+            {required ? `${fieldName}*` : fieldName}
+          </Typography>
         </Grid>
         <Grid xs={9}>
           <TextField
@@ -32,6 +34,7 @@ function PasswordField(props: any) {
             size="small"
             disabled={disabled}
             fullWidth={fullWidth}
+            required={required}
             value={formik.values[id]}
             onChange={formik.handleChange}
             type={showPassword ? 'text' : 'password'}

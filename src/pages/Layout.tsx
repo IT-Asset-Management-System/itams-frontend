@@ -6,7 +6,15 @@ function Layout() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header />
-      <Outlet />
+      <Box
+        sx={{
+          flexGrow: 1,
+          background: '#EEE',
+          padding: { md: '16px', xs: '8px' },
+        }}
+      >
+        <Outlet />
+      </Box>
     </Box>
   );
 }

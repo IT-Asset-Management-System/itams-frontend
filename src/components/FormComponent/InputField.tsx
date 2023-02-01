@@ -1,7 +1,7 @@
 import { Box, TextField, Typography, Grid } from '@mui/material';
 
 function InputField(props: any) {
-  const { id, fieldName, disabled, fullWidth, formik } = props;
+  const { id, fieldName, disabled, fullWidth, formik, required } = props;
   return (
     <Box sx={{ flexGrow: 1, py: '16px' }}>
       <Grid container spacing={2}>
@@ -14,7 +14,9 @@ function InputField(props: any) {
             pr: '16px',
           }}
         >
-          <Typography sx={{ fontWeight: 'bold' }}>{fieldName}</Typography>
+          <Typography sx={{ fontWeight: 'bold' }}>
+            {required ? `${fieldName}*` : fieldName}
+          </Typography>
         </Grid>
         <Grid xs={9}>
           <TextField
@@ -24,6 +26,7 @@ function InputField(props: any) {
             fullWidth={fullWidth}
             value={formik.values[id]}
             onChange={formik.handleChange}
+            required={required}
           />
         </Grid>
       </Grid>

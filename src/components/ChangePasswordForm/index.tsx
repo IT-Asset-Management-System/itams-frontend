@@ -1,41 +1,24 @@
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { Formik, Form } from 'formik';
-import { ImageListType } from 'react-images-uploading';
-import { updateProfile, saveAvatar } from '../../api/user';
-import { useAuthContext } from '../../context/AuthContext';
-import { useState } from 'react';
-import { UploadImage } from './UploadImage';
 import { toast } from 'react-toastify';
-import { changePassword } from '../../api/auth';
 import { resetPasswordValidationSchema } from '../../helpers/validationSchema';
-import InputField from '../FormComponent/InputField';
+import PasswordField from '../FormComponent/PasswordField';
+import { changePassword } from '../../api/auth';
 
-function ProfileForm() {
-  const { authContext, updateAuth } = useAuthContext();
-  const [image, setImage] = useState<ImageListType>([]);
-  const onImageChange = async (imageList: ImageListType) => {
-    setImage(imageList);
-  };
-
+function ChangePasswordForm() {
   const initialValues = {
-    ...authContext,
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
   };
 
-  const handleSave = async (profile: any) => {
+  const handleSubmit = async (formik: any) => {
     try {
-      const { currentPassword, newPassword, confirmPassword, ...info } =
-        profile;
-      await updateProfile(info);
-      if (image.length > 0) await saveAvatar(image[0].file);
-      if (newPassword.length > 0)
-        await changePassword(currentPassword, newPassword);
-      toast.success('Update successfully');
-      await updateAuth();
+      const { currentPassword, newPassword } = formik;
+      await changePassword(currentPassword, newPassword);
+      toast.success('Change password successfully');
     } catch (err: any) {
-      console.log('update profile', err);
+      console.log('Change password', err);
       toast.error(err.response.data.message);
     }
   };
@@ -50,34 +33,35 @@ function ProfileForm() {
         margin: 'auto',
       }}
     >
-      <Typography
-        sx={{
-          fontWeight: 'bold',
-          fontSize: '28px',
-          textAlign: 'center',
-        }}
-      >
-        My Profile
-      </Typography>
       <Formik
         initialValues={initialValues}
         validationSchema={resetPasswordValidationSchema}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={handleSave}
+        onSubmit={handleSubmit}
       >
         {(formik) => {
           return (
             <Form>
               <Box sx={{ mx: '60px', mt: '20px' }}>
-                <InputField
-                  id="name"
-                  fieldName="Name"
-                  fullWidth
+                <PasswordField
+                  id="currentPassword"
+                  fieldName="Current password"
                   formik={formik}
+                  required
                 />
-                <InputField id="phone" fieldName="Phone" formik={formik} />
-                <UploadImage image={image} onImageChange={onImageChange} />
+                <PasswordField
+                  id="newPassword"
+                  fieldName="New password"
+                  formik={formik}
+                  required
+                />
+                <PasswordField
+                  id="confirmPassword"
+                  fieldName="Confirm password"
+                  formik={formik}
+                  required
+                />
               </Box>
               <Box
                 sx={{
@@ -113,4 +97,4 @@ function ProfileForm() {
   );
 }
 
-export default ProfileForm;
+export default ChangePasswordForm;
