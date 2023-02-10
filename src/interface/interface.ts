@@ -32,10 +32,12 @@ export interface RequestAsset {
   assetModel: string;
   date: string;
   status: string;
+  note: string;
 }
 
 export interface NewRequestAsset {
   assetModelId: number;
+  note: string;
 }
 
 export enum Actions {

@@ -4,9 +4,14 @@ function SelectField(props: any) {
   const { id, fieldName, formik, data, required } = props;
   return (
     <Box sx={{ flexGrow: 1, py: '16px' }}>
-      <Grid container spacing={2}>
+      <Grid
+        container
+        sx={{ flexDirection: { xs: 'column', md: 'row' } }}
+        spacing={2}
+      >
         <Grid
-          xs={3}
+          xs={false}
+          md={3}
           sx={{
             display: 'flex',
             justifyContent: 'right',
@@ -18,7 +23,7 @@ function SelectField(props: any) {
             {required ? `${fieldName}*` : fieldName}
           </Typography>
         </Grid>
-        <Grid xs={9}>
+        <Grid xs={false} md={9}>
           <Select
             id={id}
             name={id}

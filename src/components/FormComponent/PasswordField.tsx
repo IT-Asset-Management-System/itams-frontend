@@ -14,12 +14,17 @@ function PasswordField(props: any) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   return (
     <Box sx={{ flexGrow: 1, py: '16px' }}>
-      <Grid container spacing={2}>
+      <Grid
+        container
+        sx={{ flexDirection: { xs: 'column', md: 'row' } }}
+        spacing={2}
+      >
         <Grid
-          xs={3}
+          xs={false}
+          md={3}
           sx={{
             display: 'flex',
-            justifyContent: 'right',
+            justifyContent: { md: 'right' },
             alignItems: 'center',
             pr: '16px',
           }}
@@ -28,7 +33,7 @@ function PasswordField(props: any) {
             {required ? `${fieldName}*` : fieldName}
           </Typography>
         </Grid>
-        <Grid xs={9}>
+        <Grid xs={false} md={9}>
           <TextField
             id={id}
             size="small"

@@ -7,8 +7,8 @@ import { useState } from 'react';
 import { UploadImage } from './UploadImage';
 import { toast } from 'react-toastify';
 import { changePassword } from '../../api/auth';
-import { resetPasswordValidationSchema } from '../../helpers/validationSchema';
 import InputField from '../FormComponent/InputField';
+import DatePickerField from '../FormComponent/DatePickerField';
 
 function ProfileForm() {
   const { authContext, updateAuth } = useAuthContext();
@@ -19,19 +19,12 @@ function ProfileForm() {
 
   const initialValues = {
     ...authContext,
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
   };
 
   const handleSave = async (profile: any) => {
     try {
-      const { currentPassword, newPassword, confirmPassword, ...info } =
-        profile;
-      await updateProfile(info);
+      await updateProfile(profile);
       if (image.length > 0) await saveAvatar(image[0].file);
-      if (newPassword.length > 0)
-        await changePassword(currentPassword, newPassword);
       toast.success('Update successfully');
       await updateAuth();
     } catch (err: any) {
@@ -61,7 +54,6 @@ function ProfileForm() {
       </Typography>
       <Formik
         initialValues={initialValues}
-        validationSchema={resetPasswordValidationSchema}
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={handleSave}
@@ -75,8 +67,20 @@ function ProfileForm() {
                   fieldName="Name"
                   fullWidth
                   formik={formik}
+                  disabled
+                />
+                <InputField
+                  id="email"
+                  fieldName="Email"
+                  formik={formik}
+                  required
                 />
                 <InputField id="phone" fieldName="Phone" formik={formik} />
+                <DatePickerField
+                  id="birthday"
+                  fieldName="Birthday"
+                  formik={formik}
+                />
                 <UploadImage image={image} onImageChange={onImageChange} />
               </Box>
               <Box

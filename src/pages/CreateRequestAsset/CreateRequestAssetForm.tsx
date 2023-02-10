@@ -11,6 +11,7 @@ import SelectField from '../../components/FormComponent/SelectField';
 import { createNewRequestAsset, updateRequestAsset } from '../../api/asset';
 import { useNavigate } from 'react-router-dom';
 import { getAllAssetModels } from '../../api/assetModel';
+import InputField from '../../components/FormComponent/InputField';
 
 function CreateAssetForm(props: any) {
   const { data, action } = props;
@@ -21,6 +22,7 @@ function CreateAssetForm(props: any) {
       assetModels.find((assetModel: AssetModel) => {
         return assetModel.name === data?.assetModel;
       })?.id ?? 0,
+    note: '',
   };
   useEffect(() => {
     const getData = async () => {
@@ -76,6 +78,13 @@ function CreateAssetForm(props: any) {
                   formik={formik}
                   data={assetModels}
                   required
+                />
+                <InputField
+                  id="note"
+                  fieldName="Note"
+                  formik={formik}
+                  multiline
+                  fullWidth
                 />
               </Box>
               <Box

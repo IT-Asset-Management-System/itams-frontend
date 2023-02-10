@@ -105,6 +105,12 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Status',
   },
+  {
+    id: 'note',
+    numeric: false,
+    disablePadding: false,
+    label: 'Note',
+  },
 ];
 
 interface EnhancedTableProps {
@@ -168,7 +174,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             </TableSortLabel>
           </TableCell>
         ))}
-        <TableCell>Actions</TableCell>
+        {/* <TableCell>Actions</TableCell> */}
       </TableRow>
     </TableHead>
   );
@@ -394,14 +400,15 @@ export default function RequestAssetTable() {
                       <TableCell align="left">{row.assetModel}</TableCell>
                       <TableCell align="left">{formatDate(row.date)}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
-                      <TableCell align="left">
+                      <TableCell align="left">{row.note}</TableCell>
+                      {/* <TableCell align="left">
                         <Actions
                           id={row.id}
                           path="hardware"
                           data={row}
                           onClickDelete={handleClickOpen}
                         />
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   );
                 })}

@@ -180,7 +180,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             </TableSortLabel>
           </TableCell>
         ))}
-        <TableCell>Actions</TableCell>
+        {/* <TableCell>Actions</TableCell> */}
       </TableRow>
     </TableHead>
   );
@@ -408,7 +408,7 @@ export default function AssetTable() {
                       <TableCell align="left">{row.department}</TableCell>
                       <TableCell align="left">{row.supplier}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
-                      <TableCell align="left">
+                      {/* <TableCell align="left">
                         <Actions
                           id={row.id}
                           path="my-assets"
@@ -416,7 +416,7 @@ export default function AssetTable() {
                           onClickDelete={handleClickOpen}
                           canUpdate
                         />
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   );
                 })}
