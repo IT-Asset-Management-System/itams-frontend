@@ -11,7 +11,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-// import AdbIcon from '@mui/icons-material/Adb';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../api/auth';
 import { useAuthContext } from '../../context/AuthContext';
@@ -22,7 +21,7 @@ const settings = ['Edit Your Profile', 'Change Password', 'Logout'];
 
 const Header = () => {
   const navigate = useNavigate();
-  const { getAuth, avatar } = useAuthContext();
+  const { getAuth, authContext } = useAuthContext();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
@@ -87,7 +86,6 @@ const Header = () => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
           <Typography
             variant="h6"
             noWrap
@@ -144,7 +142,6 @@ const Header = () => {
               ))}
             </Menu>
           </Box>
-          {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
           <Typography
             variant="h5"
             noWrap
@@ -183,7 +180,7 @@ const Header = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="avatar" src={avatar} />
+                <Avatar alt="avatar" src={authContext?.avatar} />
               </IconButton>
             </Tooltip>
             <Menu

@@ -5,14 +5,8 @@ import { useAuth } from '../hooks/useAuth';
 const AuthContext = createContext<any>(null);
 
 function AuthProvider({ children }: any) {
-  const {
-    isLoading,
-    authContext,
-    isAuthenticated,
-    avatar,
-    getAuth,
-    updateAuth,
-  } = useAuth();
+  const { isLoading, authContext, isAuthenticated, getAuth, updateAuth } =
+    useAuth();
 
   useEffect(() => {
     getAuth();
@@ -25,7 +19,6 @@ function AuthProvider({ children }: any) {
       value={{
         authContext,
         isAuthenticated,
-        avatar,
         getAuth,
         updateAuth,
       }}

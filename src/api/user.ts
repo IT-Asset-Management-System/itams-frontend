@@ -8,7 +8,7 @@ export const updateProfile = async (profile: any) => {
 
 export const saveAvatar = async (file: any) => {
   const formData = new FormData();
-  formData.append('file', file, file.name);
+  formData.append('image', file, file.name);
   const data = await axios.post('/user/save-avatar', formData, {
     headers: {
       accept: 'application/json',
@@ -17,11 +17,4 @@ export const saveAvatar = async (file: any) => {
     },
   });
   return data;
-};
-
-export const getAvatar = async () => {
-  const data = await axios.get('/user/get-avatar', {
-    responseType: 'arraybuffer',
-  });
-  return data.data;
 };
