@@ -29,7 +29,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { getPref, Prefs, setPref } from '../../prefs';
-import { RequestAsset } from '../../interface/interface';
+import { RequestAsset, RequestAssetStatus } from '../../interface/interface';
 import { formatDate } from '../../helpers/format';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -141,7 +141,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
   return (
     <TableHead>
-      <TableRow>
+      <TableRow sx={{ backgroundColor: '#FFF !important' }}>
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
@@ -159,6 +159,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ fontWeight: '700' }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -348,7 +349,10 @@ export default function RequestAssetTable() {
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
+            sx={{
+              minWidth: 750,
+              'tr:nth-child(2n+1)': { backgroundColor: '#f8f8f8' },
+            }}
             aria-labelledby="tableTitle"
             size="medium"
           >
@@ -399,7 +403,31 @@ export default function RequestAssetTable() {
                       </TableCell>
                       <TableCell align="left">{row.assetModel}</TableCell>
                       <TableCell align="left">{formatDate(row.date)}</TableCell>
-                      <TableCell align="left">{row.status}</TableCell>
+                      <TableCell align="left">
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: '5px',
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              width: '30px',
+                              height: '30px',
+                              backgroundColor:
+                                row.status === RequestAssetStatus.REQUESTED
+                                  ? '#EFB700'
+                                  : row.status === RequestAssetStatus.ACCEPTED
+                                  ? '#008450'
+                                  : '#B81D13',
+                              borderRadius: '50%',
+                            }}
+                          ></Box>
+                          {row.status}
+                        </Box>
+                      </TableCell>
                       <TableCell align="left">{row.note}</TableCell>
                       {/* <TableCell align="left">
                         <Actions
