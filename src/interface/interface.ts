@@ -21,10 +21,12 @@ export interface Supplier {
 export interface Asset {
   id: number;
   name: string;
+  image: string;
   assetModel: string;
   department: string;
   supplier: string;
   status: string;
+  statusColor: string;
 }
 
 export interface RequestAsset {
@@ -33,6 +35,12 @@ export interface RequestAsset {
   date: string;
   status: string;
   note: string;
+}
+
+export enum RequestAssetStatus {
+  REQUESTED = 'Requested',
+  REJECTED = 'Rejected',
+  ACCEPTED = 'Accepted',
 }
 
 export interface NewRequestAsset {

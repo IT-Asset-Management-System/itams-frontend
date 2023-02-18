@@ -21,10 +21,11 @@ export const signupValidationSchema = loginValidationSchema.concat(
 
 export const resetPasswordValidationSchema = Yup.object({
   currentPassword: Yup.string().matches(/.*\S.*/, 'Password is not null'),
-  newPassword: Yup.string().matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-    'Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character',
-  ),
+  newPassword: Yup.string().required(),
+  // newPassword: Yup.string().matches(
+  //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+  //   'Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character',
+  // ),
   confirmPassword: Yup.string().oneOf(
     [Yup.ref('newPassword'), null],
     'Password not match',
