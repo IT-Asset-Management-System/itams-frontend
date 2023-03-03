@@ -28,7 +28,7 @@ function SelectField(props: any) {
             id={id}
             name={id}
             defaultValue={formik.values[id]}
-            value={formik.values[id]}
+            value={formik.values[id] === 0 ? '' : formik.values[id]}
             size="small"
             sx={{
               width: '200px',

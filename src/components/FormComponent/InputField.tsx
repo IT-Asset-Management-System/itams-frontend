@@ -44,6 +44,8 @@ function InputField(props: any) {
             required={required}
             multiline={multiline}
             minRows={3}
+            helperText={formik?.errors[id]}
+            error={formik?.errors[id]}
           />
         </Grid>
       </Grid>

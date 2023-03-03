@@ -80,7 +80,7 @@ function LoginForm() {
                       color: '#4D4D4D',
                     }}
                   >
-                    Email address
+                    Username
                   </Typography>
                   <TextField
                     fullWidth

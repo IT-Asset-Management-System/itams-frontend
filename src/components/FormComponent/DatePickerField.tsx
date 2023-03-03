@@ -48,7 +48,8 @@ export default function DatePickerField(props: any) {
                   size="small"
                   {...params}
                   fullWidth={fullWidth}
-                  error={false}
+                  helperText={formik?.errors[id]}
+                  error={formik?.errors[id]}
                 />
               )}
             />
