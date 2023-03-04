@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import { changePassword } from '../../api/auth';
 import InputField from '../FormComponent/InputField';
 import DatePickerField from '../FormComponent/DatePickerField';
+import * as Yup from 'yup';
 
 function ProfileForm() {
   const { authContext, updateAuth } = useAuthContext();
@@ -20,6 +21,10 @@ function ProfileForm() {
   const initialValues = {
     ...authContext,
   };
+  const validationSchema = Yup.object({
+    email: Yup.string().email('Invalid email'),
+    birthday: Yup.date().typeError('Invalid date'),
+  });
 
   const handleSave = async (profile: any) => {
     try {
@@ -54,6 +59,7 @@ function ProfileForm() {
       </Typography>
       <Formik
         initialValues={initialValues}
+        validationSchema={validationSchema}
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={handleSave}
