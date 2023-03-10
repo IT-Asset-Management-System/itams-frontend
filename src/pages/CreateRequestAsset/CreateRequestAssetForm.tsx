@@ -1,4 +1,5 @@
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { Formik, Form } from 'formik';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
@@ -16,6 +17,7 @@ import InputField from '../../components/FormComponent/InputField';
 function CreateAssetForm(props: any) {
   const { data, action } = props;
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
   const [assetModels, setAssetModels] = useState<AssetModel[]>([]);
   const initialValues: NewRequestAsset = {
     assetModelId:
@@ -37,6 +39,7 @@ function CreateAssetForm(props: any) {
   }, []);
 
   const handleSubmit = async (newRequestAsset: NewRequestAsset) => {
+    setLoading(true);
     try {
       if (action === Actions.UPDATE)
         await updateRequestAsset(data.id, newRequestAsset);
@@ -51,6 +54,7 @@ function CreateAssetForm(props: any) {
       console.log('Create asset', err);
       toast.error(err.response.data.message);
     }
+    setLoading(false);
   };
 
   return (
@@ -95,7 +99,8 @@ function CreateAssetForm(props: any) {
                   justifyContent: 'right',
                 }}
               >
-                <Button
+                <LoadingButton
+                  loading={loading}
                   type="submit"
                   sx={{
                     background: '#007aff',
@@ -111,7 +116,7 @@ function CreateAssetForm(props: any) {
                   }}
                 >
                   Save
-                </Button>
+                </LoadingButton>
               </Box>
             </Form>
           );

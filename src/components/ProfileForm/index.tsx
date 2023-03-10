@@ -1,4 +1,5 @@
 import { Box, Typography, Button } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { Formik, Form } from 'formik';
 import { ImageListType } from 'react-images-uploading';
 import { updateProfile, saveAvatar } from '../../api/user';
@@ -13,6 +14,7 @@ import * as Yup from 'yup';
 
 function ProfileForm() {
   const { authContext, updateAuth } = useAuthContext();
+  const [loading, setLoading] = useState<boolean>(false);
   const [image, setImage] = useState<ImageListType>([]);
   const onImageChange = async (imageList: ImageListType) => {
     setImage(imageList);
@@ -27,6 +29,7 @@ function ProfileForm() {
   });
 
   const handleSave = async (profile: any) => {
+    setLoading(true);
     try {
       await updateProfile(profile);
       if (image.length > 0) await saveAvatar(image[0].file);
@@ -36,6 +39,7 @@ function ProfileForm() {
       console.log('update profile', err);
       toast.error(err.response.data.message);
     }
+    setLoading(false);
   };
 
   return (
@@ -97,7 +101,8 @@ function ProfileForm() {
                   justifyContent: 'right',
                 }}
               >
-                <Button
+                <LoadingButton
+                  loading={loading}
                   type="submit"
                   sx={{
                     background: '#007aff',
@@ -113,7 +118,7 @@ function ProfileForm() {
                   }}
                 >
                   Save
-                </Button>
+                </LoadingButton>
               </Box>
             </Form>
           );
