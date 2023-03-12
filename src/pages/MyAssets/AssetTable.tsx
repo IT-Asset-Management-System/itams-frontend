@@ -257,9 +257,12 @@ export default function AssetTable() {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof Asset>('id');
   const [selected, setSelected] = React.useState<readonly number[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(
-    getPref<number>(Prefs.ROWS_PER_PAGE) ?? 5,
+    Number(getPref(Prefs.ROWS_PER_PAGE)) === 0
+      ? 5
+      : Number(getPref(Prefs.ROWS_PER_PAGE)),
   );
   const [rows, setRows] = React.useState<Asset[]>([]);
 
@@ -275,12 +278,14 @@ export default function AssetTable() {
   };
 
   const getData = async () => {
+    setLoading(true);
     try {
       const asset = await getAsset();
       setRows(asset);
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
   React.useEffect(() => {
     getData();
@@ -462,6 +467,20 @@ export default function AssetTable() {
                   }}
                 >
                   <TableCell colSpan={6} />
+                </TableRow>
+              )}
+              {rows.length === 0 && !loading && (
+                <TableRow>
+                  <TableCell colSpan={100} align="center">
+                    No data
+                  </TableCell>
+                </TableRow>
+              )}
+              {rows.length === 0 && loading && (
+                <TableRow>
+                  <TableCell colSpan={100} align="center">
+                    Loading...
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>

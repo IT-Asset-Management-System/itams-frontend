@@ -1,11 +1,14 @@
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { Formik, Form } from 'formik';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { resetPasswordValidationSchema } from '../../helpers/validationSchema';
 import PasswordField from '../FormComponent/PasswordField';
 import { changePassword } from '../../api/auth';
 
 function ChangePasswordForm() {
+  const [loading, setLoading] = useState<boolean>(false);
   const initialValues = {
     currentPassword: '',
     newPassword: '',
@@ -13,6 +16,7 @@ function ChangePasswordForm() {
   };
 
   const handleSubmit = async (formik: any) => {
+    setLoading(true);
     try {
       const { currentPassword, newPassword } = formik;
       await changePassword(currentPassword, newPassword);
@@ -21,6 +25,7 @@ function ChangePasswordForm() {
       console.log('Change password', err);
       toast.error(err.response.data.message);
     }
+    setLoading(false);
   };
 
   return (
@@ -71,7 +76,8 @@ function ChangePasswordForm() {
                   justifyContent: 'right',
                 }}
               >
-                <Button
+                <LoadingButton
+                  loading={loading}
                   type="submit"
                   sx={{
                     background: '#007aff',
@@ -87,7 +93,7 @@ function ChangePasswordForm() {
                   }}
                 >
                   Save
-                </Button>
+                </LoadingButton>
               </Box>
             </Form>
           );
