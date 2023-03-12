@@ -248,7 +248,9 @@ export default function RequestAssetTable() {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(
-    Number(getPref(Prefs.ROWS_PER_PAGE)) ?? 5,
+    Number(getPref(Prefs.ROWS_PER_PAGE)) === 0
+      ? 5
+      : Number(getPref(Prefs.ROWS_PER_PAGE)),
   );
   const [rows, setRows] = React.useState<RequestAsset[]>([]);
 
