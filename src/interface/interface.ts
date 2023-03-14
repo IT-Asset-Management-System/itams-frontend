@@ -18,6 +18,11 @@ export interface Supplier {
   name: string;
 }
 
+export interface Category {
+  id: number;
+  name: string;
+}
+
 export interface Asset {
   id: number;
   name: string;
@@ -31,7 +36,7 @@ export interface Asset {
 
 export interface RequestAsset {
   id: number;
-  assetModel: string;
+  category: string;
   date: string;
   status: string;
   note: string;
@@ -44,7 +49,7 @@ export enum RequestAssetStatus {
 }
 
 export interface NewRequestAsset {
-  assetModelId: number;
+  categoryId: number;
   note: string;
 }
 

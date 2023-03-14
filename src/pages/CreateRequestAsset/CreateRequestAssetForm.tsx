@@ -3,34 +3,30 @@ import { LoadingButton } from '@mui/lab';
 import { Formik, Form } from 'formik';
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import {
-  Actions,
-  AssetModel,
-  NewRequestAsset,
-} from '../../interface/interface';
+import { Actions, Category, NewRequestAsset } from '../../interface/interface';
 import SelectField from '../../components/FormComponent/SelectField';
 import { createNewRequestAsset, updateRequestAsset } from '../../api/asset';
 import { useNavigate } from 'react-router-dom';
-import { getAllAssetModels } from '../../api/assetModel';
+import { getAllCategories } from '../../api/category';
 import InputField from '../../components/FormComponent/InputField';
 
 function CreateAssetForm(props: any) {
   const { data, action } = props;
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
-  const [assetModels, setAssetModels] = useState<AssetModel[]>([]);
+  const [category, setCategories] = useState<Category[]>([]);
   const initialValues: NewRequestAsset = {
-    assetModelId:
-      assetModels.find((assetModel: AssetModel) => {
-        return assetModel.name === data?.assetModel;
+    categoryId:
+      category.find((category: Category) => {
+        return category.name === data?.category;
       })?.id ?? 0,
     note: '',
   };
   useEffect(() => {
     const getData = async () => {
       try {
-        const assetModels: AssetModel[] = await getAllAssetModels();
-        setAssetModels(assetModels);
+        const category: Category[] = await getAllCategories();
+        setCategories(category);
       } catch (err) {
         console.log(err);
       }
@@ -77,10 +73,10 @@ function CreateAssetForm(props: any) {
             <Form>
               <Box sx={{ mx: '60px', mt: '20px' }}>
                 <SelectField
-                  id="assetModelId"
-                  fieldName="Asset Model"
+                  id="categoryId"
+                  fieldName="Category"
                   formik={formik}
-                  data={assetModels}
+                  data={category}
                   required
                 />
                 <InputField

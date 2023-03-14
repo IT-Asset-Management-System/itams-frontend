@@ -88,10 +88,10 @@ const headCells: readonly HeadCell[] = [
     label: 'ID',
   },
   {
-    id: 'assetModel',
+    id: 'category',
     numeric: false,
     disablePadding: false,
-    label: 'Model',
+    label: 'Category',
   },
   {
     id: 'date',
@@ -406,7 +406,7 @@ export default function RequestAssetTable() {
                       >
                         {row.id}
                       </TableCell>
-                      <TableCell align="left">{row.assetModel}</TableCell>
+                      <TableCell align="left">{row.category}</TableCell>
                       <TableCell align="left">{formatDate(row.date)}</TableCell>
                       <TableCell align="left">
                         <Box
