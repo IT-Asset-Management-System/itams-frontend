@@ -11,7 +11,7 @@ function CreateRequestAsset(props: any) {
   return (
     <Box>
       <PageHeader
-        name={action === Actions.UPDATE ? 'Asset Update' : 'Create Asset'}
+        name={action === Actions.UPDATE ? 'Asset Update' : 'Create Request'}
         canGoBack
       />
       <CreateRequestAssetForm data={state} action={action} />
